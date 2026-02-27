@@ -282,12 +282,6 @@ Typical runtime: **<10 ms for most pages** (depends on page size and device).
 
 Requires modern DOM APIs.
 
-## Demo
-
-![SEO review panel demo](https://firebasestorage.googleapis.com/v0/b/rfid-softwares.firebasestorage.app/o/assets%2Fother%2Fseo_review.png?alt=media)
-
-Example of how you might present the results in a panel:
-
 ```text
 SEO Score: 82 (Good)
 
