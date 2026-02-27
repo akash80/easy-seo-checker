@@ -1,6 +1,6 @@
 {
   "name": "easy-seo-checker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Client-side SEO page analyzer (browser-only): DOM analysis, scoring, and actionable suggestions.",
   "author": "Akash Arora",
   "license": "MIT",
