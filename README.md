@@ -1,6 +1,6 @@
 # easy-seo-checker
 
-[![CI](https://github.com/akash80/easy-seo-checker.git/actions/workflows/ci.yml/badge.svg)](https://github.com/akash80/easy-seo-checker.git/actions)
+[![CI](https://github.com/akash80/easy-seo-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/akash80/easy-seo-checker/actions)
 [![npm version](https://img.shields.io/npm/v/easy-seo-checker)](https://www.npmjs.com/package/easy-seo-checker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/easy-seo-checker)](https://bundlephobia.com/package/easy-seo-checker)
