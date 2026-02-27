@@ -2,11 +2,22 @@
 
 [![CI](https://github.com/akash80/easy-seo-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/akash80/easy-seo-checker/actions)
 [![npm version](https://img.shields.io/npm/v/easy-seo-checker)](https://www.npmjs.com/package/easy-seo-checker)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/easy-seo-checker)](https://bundlephobia.com/package/easy-seo-checker)
 
 Lightweight **client-side SEO analyzer for web pages**.  
-Analyzes DOM content, calculates an SEO score (0–100), and generates actionable suggestions — all directly in the browser with **zero runtime dependencies**.
+Analyzes the rendered DOM, calculates an SEO score (0–100) with clear labels, and generates actionable suggestions — all directly in the browser with **zero runtime dependencies**.
+
+## Features
+
+- 📊 **SEO scoring (0–100)** with clear labels
+- 🔍 **DOM analysis** for titles, meta tags, headings, images, links, and more
+- 🧠 **Actionable SEO recommendations** you can surface in UIs
+- ⚡ **Zero runtime dependencies**
+- 🌐 **Browser-only** (runs after page render)
+- ⚛️ Optional **React hook** (`easy-seo-checker/react`)
+- 🎯 Ignore elements with `[data-seo-ignore]`
+- 📦 Small bundle size
 
 ## Installation
 
@@ -30,15 +41,13 @@ The core entry (`easy-seo-checker`) is **framework-agnostic**. It works anywhere
 | Next.js / Nuxt / Angular Universal | Client-side only | Call after mount, not during SSR |
 | Node.js / Deno / Bun (server) | No | Requires browser DOM |
 
-> **Browser only** — this package uses `document`, `window`, and `location`. Do not call it during server-side rendering.
-
 The optional **`easy-seo-checker/react`** sub-path provides a `useSeoPageAnalysis` hook for React projects. React is listed as an **optional** peer dependency — non-React projects won't install or download it.
 
 ## Quick Start
 
 ### Vanilla / any framework
 
-Call `getSeoPageAnalysis` after the page has rendered:
+Run the analyzer after the page has rendered:
 
 ```ts
 import { getSeoPageAnalysis, getScoreLabel } from "easy-seo-checker";
@@ -114,14 +123,20 @@ onMounted(() => {
 ### React (optional hook)
 
 ```tsx
+import { useEffect } from "react";
 import { getScoreLabel } from "easy-seo-checker";
 import { useSeoPageAnalysis } from "easy-seo-checker/react";
 
 function SeoReviewPanel() {
   const pathname = typeof window !== "undefined" ? window.location.pathname : null;
   const { result, run, reset, loading, error } = useSeoPageAnalysis(pathname, {
-    runOnMount: true,
+    runOnMount: false,
   });
+
+  useEffect(() => {
+    if (!pathname) return;
+    run();
+  }, [pathname, run]);
 
   if (loading) return <p>Analyzing…</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -129,9 +144,13 @@ function SeoReviewPanel() {
 
   return (
     <div>
-      <p>Score: {result.score} – {getScoreLabel(result.score)}</p>
+      <p>
+        Score: {result.score} – {getScoreLabel(result.score)}
+      </p>
       <ul>
-        {result.recommendations.map((r, i) => <li key={i}>{r}</li>)}
+        {result.recommendations.map((r, i) => (
+          <li key={i}>{r}</li>
+        ))}
       </ul>
       <button onClick={reset}>Clear</button>
     </div>
@@ -139,7 +158,30 @@ function SeoReviewPanel() {
 }
 ```
 
-Or set `runOnMount: false` and call `run()` manually (e.g. when a modal opens).
+## Example Output
+
+```js
+{
+  score: 82,
+  label: "Good",
+  recommendations: [
+    "Meta description is missing",
+    "Add alt text to 3 images",
+    "Consider adding structured data (JSON-LD)"
+  ]
+}
+```
+
+## Browser Only
+
+This package runs **only in the browser** because it relies on:
+
+- `document`
+- `window`
+- `location`
+
+Do **not run during SSR** (Next.js, Nuxt, etc.).  
+Instead, run it **after the page mounts** (e.g. in `useEffect`, `onMounted`, `ngAfterViewInit`, `onMount`, etc.).
 
 ## Ignore Selector
 
@@ -151,7 +193,7 @@ Elements with the attribute `[data-seo-ignore]` are excluded from analysis by de
 </div>
 ```
 
-You can customize this via the `ignoreSelector` option.
+You can customize this via the `ignoreSelector` option or pass your own `ignoreSelector` when calling `getSeoPageAnalysis`.
 
 ## API
 
@@ -175,17 +217,6 @@ interface SeoAnalyzerOptions {
   ignoreSelector?: string;
 }
 ```
-
-#### Score Breakdown (100 points)
-
-| Category | Points | Criteria |
-|----------|--------|----------|
-| Meta tags | 30 | Title present (10), title length 30-60 (5), description present (10), description length 120-160 (5) |
-| Open Graph | 20 | og:title (5), og:description (5), og:image (5), twitter:card (5) |
-| Headings | 20 | Single H1 (15) or multiple H1s (5), H2 present (5) |
-| Images | 15 | Scaled by alt-text coverage; full marks if no images |
-| Links | 10 | Internal links (5), external links (5) |
-| Structured data | 5 | Valid JSON-LD present |
 
 ### React entry (`easy-seo-checker/react`)
 
@@ -215,6 +246,58 @@ All types are exported from the main entry:
 - `SeoPageContentStructureResult`
 - `SeoPageKeywordDensityResult`
 - `SeoPageUrlSlugResult`
+
+## Score Breakdown (100 points)
+
+| Category | Points | Criteria |
+|----------|--------|----------|
+| Meta tags | 30 | Title present (10), title length 30–60 (5), description present (10), description length 120–160 (5) |
+| Open Graph | 20 | `og:title` (5), `og:description` (5), `og:image` (5), `twitter:card` (5) |
+| Headings | 20 | Single H1 (15) or multiple H1s (5), H2 present (5) |
+| Images | 15 | Scaled by alt-text coverage; full marks if no images |
+| Links | 10 | Internal links (5), external links (5) |
+| Structured data | 5 | Valid JSON-LD present |
+
+## Use Cases
+
+- SEO audit tools
+- CMS SEO panels
+- Browser extensions
+- Admin dashboards
+- Static site SEO validation
+- Content publishing workflows
+
+## Performance
+
+The analyzer scans the rendered DOM once and is designed to be lightweight.
+
+Typical runtime: **<10 ms for most pages** (depends on page size and device).
+
+## Browser Support
+
+- Chrome
+- Edge
+- Firefox
+- Safari
+
+Requires modern DOM APIs.
+
+## Demo
+
+![SEO review panel demo](https://firebasestorage.googleapis.com/v0/b/rfid-softwares.firebasestorage.app/o/assets%2Fother%2Fseo_review.png?alt=media)
+
+Example of how you might present the results in a panel:
+
+```text
+SEO Score: 82 (Good)
+
+✔ Title tag present
+✔ H1 found
+⚠ Missing meta description
+⚠ 3 images missing alt text
+```
+
+You can build your own UI on top of `SeoPageAnalysisResult` to match your product.
 
 ## Development
 
