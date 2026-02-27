@@ -1,0 +1,79 @@
+{
+  "name": "easy-seo-checker",
+  "version": "1.0.0",
+  "description": "Client-side SEO page analyzer (browser-only): DOM analysis, scoring, and actionable suggestions.",
+  "author": "Akash Arora",
+  "license": "MIT",
+  "keywords": [
+    "easy-seo-checker",
+    "easy-seo-checker-react",
+    "seo-checker",
+    "seo",
+    "seo-analyzer",
+    "client-side",
+    "browser",
+    "meta-tags",
+    "structured-data",
+    "open-graph",
+    "react-hook",
+    "dom-analysis",
+    "seo-score"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akash80/easy-seo-checker.git"
+  },
+  "homepage": "https://github.com/akash80/easy-seo-checker.git#readme",
+  "bugs": "https://github.com/akash80/easy-seo-checker.git/issues",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.3",
+    "happy-dom": "^15.11.7",
+    "tsup": "^8.3.5",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^2.1.9"
+  }
+}
